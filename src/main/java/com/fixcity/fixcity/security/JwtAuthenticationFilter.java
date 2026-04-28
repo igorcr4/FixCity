@@ -1,11 +1,10 @@
 package com.fixcity.fixcity.security;
 
-import com.fixcity.fixcity.user.User;
+import com.fixcity.fixcity.user.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,16 +33,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String token = auth.substring(7);
-        String userName;
+        String username;
         try {
-            userName = jwtService.extractUsername(token);
+            username = jwtService.extractUsername(token);
         } catch (Exception e) {
             chain.doFilter(req, res);
             return;
         }
 
-        if(userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails user = userDetailsService.loadUserByUsername(userName);
+        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails user = userDetailsService.loadUserByUsername(username);
             if(jwtService.isValid(token, user)) {
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

@@ -1,6 +1,6 @@
 package com.fixcity.fixcity.user.validation;
 
-import com.fixcity.fixcity.user.UserRepository;
+import com.fixcity.fixcity.user.repository.UserRepository;
 import com.fixcity.fixcity.user.exception.WeakPasswordException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -1,5 +1,7 @@
 package com.fixcity.fixcity.exception;
 
+import com.fixcity.fixcity.geography.csc.exception.CscClientException;
+import com.fixcity.fixcity.geography.csc.exception.CscConfigurationException;
 import com.fixcity.fixcity.user.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,6 +70,26 @@ public class GlobalExceptionHandler {
                         ex.getMessage(),
                         Instant.now(),
                         "WEAK_PASSWORD"
+                ));
+    }
+
+    @ExceptionHandler(CscConfigurationException.class)
+    public ResponseEntity<ErrorResponse> handleCscConfiguration(CscConfigurationException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse(
+                        ex.getMessage(),
+                        Instant.now(),
+                        "CSC_CONFIGURATION_ERROR"
+                ));
+    }
+
+    @ExceptionHandler(CscClientException.class)
+    public ResponseEntity<ErrorResponse> handleCscClient(CscClientException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                .body(new ErrorResponse(
+                        ex.getMessage(),
+                        Instant.now(),
+                        "CSC_CLIENT_ERROR"
                 ));
     }
 }
