@@ -1,5 +1,6 @@
 package com.fixcity.fixcity.user.model;
 
+import com.fixcity.fixcity.municipality.model.Municipality;
 import com.fixcity.fixcity.user.Status;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,6 +14,7 @@ public record UserPrincipal(Long id,
                             @Getter
                             String email,
                             String hash,
+                            Municipality municipality,
                             Set<GrantedAuthority> authorities,
                             boolean accountNonLocked,
                             boolean enabled) implements UserDetails {
@@ -32,6 +34,7 @@ public record UserPrincipal(Long id,
                 u.getUsername(),
                 u.getEmail(),
                 u.getPassword(),
+                u.getMunicipality(),
                 auth,
                 nonLocked,
                 isEnabled
@@ -65,11 +68,12 @@ public record UserPrincipal(Long id,
 
     @Override
     public String toString() {
-        return "UserPrincipal{id=%d, email=%s, username=%s, roles=%s, enabled=%s, nonLocked=%s}"
+        return "UserPrincipal{id=%d, email=%s, username=%s, municipality=%s, roles=%s, enabled=%s, nonLocked=%s}"
                 .formatted(
                         id,
                         username,
                         email,
+                        municipality,
                         authorities.stream().map(GrantedAuthority::getAuthority).toList(),
                         enabled,
                         accountNonLocked

@@ -15,11 +15,13 @@ import com.fixcity.fixcity.user.role.Role;
 import com.fixcity.fixcity.user.model.User;
 import com.fixcity.fixcity.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -114,6 +116,10 @@ public class ReportService {
             report.setStatus(req.status());
         }
 
+        if (req.address() != null) {
+            report.setAddress(req.address());
+        }
+
         if(req.latitude() != null) {
             report.setLatitude(req.latitude());
         }
@@ -148,11 +154,23 @@ public class ReportService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReportResponse> getReportsForMunicipality(Long municipalityId) {
-        return reportRepository.findByMunicipalityId(municipalityId)
+    public List<ReportResponse> getReportsForMunicipality(Long userId) {
+        User user = userService.findById(userId);
+
+        if (user.getRole() != Role.ROLE_MUNICIPAL_ADMIN) {
+            throw new AccessDeniedException("User-ul nu are drepturi de admin!");
+        }
+
+        if (user.getMunicipality() == null) {
+            throw new IllegalStateException("User-ul nu are o primarie asociata!");
+        }
+
+        Long municipalityId = user.getMunicipality().getId();
+        Municipality municipality = municipalityService.findById(municipalityId);
+
+        return municipality.getReports()
                 .stream()
                 .map(reportMapper::toResponse)
                 .toList();
     }
-
 }

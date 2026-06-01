@@ -24,6 +24,7 @@ public class Report {
     private String title;
     private String imageUrl;
     private String description;
+    private String address;
 
     private double latitude;
     private double longitude;

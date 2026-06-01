@@ -9,6 +9,7 @@ public record ReportUpdateRequest(
         String description,
         Status status,
         Category category,
+        String address,
         Double latitude,
         Double longitude,
         Boolean removeImage

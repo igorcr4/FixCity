@@ -37,6 +37,12 @@ public class ReportController {
         return ResponseEntity.status(HttpStatus.OK).body(reports);
     }
 
+    @GetMapping("/municipal-admin")
+    public ResponseEntity<List<ReportResponse>> reportsForMunicipality(@AuthenticationPrincipal UserPrincipal principal) {
+        List<ReportResponse> reports = reportService.getReportsForMunicipality(principal.id());
+        return ResponseEntity.status(HttpStatus.OK).body(reports);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ReportResponse> getReportById(@PathVariable Long id) {
         ReportResponse report = reportService.getReportById(id);
