@@ -5,8 +5,10 @@ import com.fixcity.fixcity.geography.csc.exception.CscConfigurationException;
 import com.fixcity.fixcity.user.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.time.Instant;
 
@@ -90,6 +92,26 @@ public class GlobalExceptionHandler {
                         ex.getMessage(),
                         Instant.now(),
                         "CSC_CLIENT_ERROR"
+                ));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleUnreadableRequest(HttpMessageNotReadableException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(
+                        "Datele trimise nu sunt valide.",
+                        Instant.now(),
+                        "INVALID_REQUEST_BODY"
+                ));
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<ErrorResponse> handleMissingRequestPart(MissingServletRequestPartException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(
+                        "Lipsește o parte obligatorie din request.",
+                        Instant.now(),
+                        "MISSING_REQUEST_PART"
                 ));
     }
 }
