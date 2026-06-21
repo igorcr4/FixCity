@@ -1,5 +1,7 @@
 package com.fixcity.fixcity.report.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fixcity.fixcity.comment.Comment;
 import com.fixcity.fixcity.municipality.model.Municipality;
 import com.fixcity.fixcity.report.Category;
 import com.fixcity.fixcity.report.Status;
@@ -10,6 +12,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "reports")
@@ -35,8 +39,13 @@ public class Report {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreated() {
+        createdAt = LocalDateTime.now();
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -45,4 +54,9 @@ public class Report {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "municipality_id")
     private Municipality municipality;
+
+    @OneToMany(mappedBy = "report", orphanRemoval = true)
+    @JsonBackReference
+    private List<Comment> comments = new ArrayList<>();
+
 }

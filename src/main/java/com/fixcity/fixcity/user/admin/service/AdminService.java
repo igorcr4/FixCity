@@ -1,5 +1,7 @@
 package com.fixcity.fixcity.user.admin.service;
 
+import com.fixcity.fixcity.subscrption.enumeration.PlanType;
+import com.fixcity.fixcity.subscrption.service.FeatureAccessService;
 import com.fixcity.fixcity.municipality.service.MunicipalityService;
 import com.fixcity.fixcity.municipality.model.Municipality;
 import com.fixcity.fixcity.user.admin.response.AdminUserResponse;
@@ -16,6 +18,7 @@ public class AdminService {
     private final UserService userService;
     private final UserRepository userRepository;
     private final MunicipalityService municipalityService;
+    private final FeatureAccessService featureAccessService;
 
     public void promoteToMunicipalAdmin(Long userId, String country, String state, String city) {
 

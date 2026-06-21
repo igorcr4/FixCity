@@ -16,8 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/reports")
 @RequiredArgsConstructor
+@RequestMapping("/api/reports")
 public class ReportController {
     private final ReportService reportService;
 

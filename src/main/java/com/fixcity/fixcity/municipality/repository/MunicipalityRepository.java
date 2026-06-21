@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface MunicipalityRepository extends JpaRepository<Municipality, Long> {
 
     Optional<Municipality> findByCountryAndStateAndName(String country, String state, String name);
+
+    Optional<Municipality> findByStripeCustomerId(String customerId);
 }

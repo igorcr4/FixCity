@@ -1,8 +1,8 @@
 package com.fixcity.fixcity.user.admin.controller;
 
+import com.fixcity.fixcity.user.admin.request.PromoteToMunicipalAdminRequest;
 import com.fixcity.fixcity.user.admin.service.AdminService;
 import com.fixcity.fixcity.user.admin.response.AdminUserResponse;
-import com.fixcity.fixcity.user.admin.request.PromoteToMunicipalAdminRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

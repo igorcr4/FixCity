@@ -4,7 +4,7 @@ import com.fixcity.fixcity.security.JwtService;
 import com.fixcity.fixcity.user.model.User;
 import com.fixcity.fixcity.user.exception.IncorrectPasswordException;
 import com.fixcity.fixcity.user.model.UserPrincipal;
-import com.fixcity.fixcity.user.request.LoginReq;
+import com.fixcity.fixcity.user.request.LoginRequest;
 import com.fixcity.fixcity.user.response.LoginResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,7 +21,7 @@ public class AuthService {
     private final UserService userService;
     private final JwtService jwtService;
 
-    public LoginResponse login(LoginReq req) {
+    public LoginResponse login(LoginRequest req) {
         User user = userService.findByEmail(req.email());
 
         if (!passwordEncoder.matches(req.password(), user.getPassword())) {

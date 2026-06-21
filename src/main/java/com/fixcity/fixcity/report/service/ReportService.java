@@ -21,43 +21,42 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ReportService {
 
-    private final ReportRepository reportRepository;
+    private final ReportRepository repository;
     private final ImageUploadService imageUploadService;
     private final ReportMapper reportMapper;
     private final UserService userService;
     private final MunicipalityService municipalityService;
 
-    public ReportResponse createReport(Long userId, ReportCreateRequest req, MultipartFile file) {
+    public ReportResponse createReport(Long userId, ReportCreateRequest request, MultipartFile file) {
 
         User user = userService.findById(userId);
 
         Municipality municipality = municipalityService.findOrCreateMunicipality(
-                req.country(),
-                req.state(),
-                req.city()
+                request.country(),
+                request.state(),
+                request.city()
         );
 
         String imageUrl = imageUploadService.uploadImage(file);
 
-        Report report = reportMapper.toEntity(req);
+        Report report = reportMapper.toEntity(request);
         report.setUser(user);
         report.setImageUrl(imageUrl);
         report.setMunicipality(municipality);
 
-        reportRepository.save(report);
+        repository.save(report);
         return reportMapper.toResponse(report);
     }
 
     @Transactional
     public List<ReportResponse> getAllReports() {
-        return reportRepository.findAll().stream().map(
+        return repository.findAll().stream().map(
                 reportMapper::toResponse
         ).toList();
     }
@@ -72,8 +71,13 @@ public class ReportService {
     }
 
     @Transactional
+    public Report findReportById(Long reportId) {
+        return repository.findById(reportId).orElseThrow(ReportNotFoundException::new);
+    }
+
+    @Transactional
     public ReportResponse getReportById(Long reportId) {
-        Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Nu a fost găsit"));//exceptie personalizata
+        Report report = repository.findById(reportId).orElseThrow(() -> new RuntimeException("Nu a fost găsit"));//exceptie personalizata
         return reportMapper.toResponse(report);
     }
 
@@ -88,7 +92,7 @@ public class ReportService {
 
     @Transactional
     public ReportResponse updateReport(Long reportId, Long userId, ReportUpdateRequest req, MultipartFile file) {
-        Report report = reportRepository.findById(reportId).orElseThrow(ReportNotFoundException::new);
+        Report report = repository.findById(reportId).orElseThrow(ReportNotFoundException::new);
 
         User user = userService.findById(userId);
 
@@ -144,13 +148,13 @@ public class ReportService {
 
     @Transactional
     public void deleteReport(Long reportId, Long userId) {
-        Report report = reportRepository.findById(reportId).orElseThrow(ReportNotFoundException::new);
+        Report report = repository.findById(reportId).orElseThrow(ReportNotFoundException::new);
 
         if(!report.getUser().getId().equals(userId)){
             throw new ModifyReportException();
         }
 
-        reportRepository.delete(report);
+        repository.delete(report);
     }
 
     @Transactional(readOnly = true)

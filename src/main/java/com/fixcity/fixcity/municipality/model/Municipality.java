@@ -24,6 +24,8 @@ public class Municipality {
     private String country;
     private String state;
 
+    private String stripeCustomerId;
+
     @OneToMany(mappedBy = "municipality")
     private List<Report> reports = new ArrayList<>();
 

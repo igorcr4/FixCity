@@ -1,6 +1,6 @@
 package com.fixcity.fixcity.user.controller;
 
-import com.fixcity.fixcity.user.request.LoginReq;
+import com.fixcity.fixcity.user.request.LoginRequest;
 import com.fixcity.fixcity.user.response.LoginResponse;
 import com.fixcity.fixcity.user.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginReq req) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest req) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(authService.login(req));
     }
 }

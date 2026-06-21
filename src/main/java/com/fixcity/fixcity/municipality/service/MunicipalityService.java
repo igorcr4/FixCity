@@ -2,9 +2,12 @@ package com.fixcity.fixcity.municipality.service;
 
 import com.fixcity.fixcity.municipality.model.Municipality;
 import com.fixcity.fixcity.municipality.repository.MunicipalityRepository;
+import com.fixcity.fixcity.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +33,16 @@ public class MunicipalityService {
                         }
                 );
     }
+
+    public int getMunicipalityAdmins(Municipality municipality) {
+        List<User> users = municipality.getUsers();
+        return users.size();
+    }
+
+    public Municipality findByStripeCustomerId(String customerId) {
+        return municipalityRepository.findByStripeCustomerId(customerId).orElseThrow();//exceptie personalizata
+    }
+
 
     @Transactional(readOnly = true)
     public Municipality findById(Long id) {
