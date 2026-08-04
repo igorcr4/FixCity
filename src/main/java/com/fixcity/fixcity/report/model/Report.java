@@ -1,7 +1,7 @@
 package com.fixcity.fixcity.report.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fixcity.fixcity.comment.Comment;
+import com.fixcity.fixcity.comment.model.Comment;
 import com.fixcity.fixcity.municipality.model.Municipality;
 import com.fixcity.fixcity.report.Category;
 import com.fixcity.fixcity.report.Status;
@@ -27,6 +27,7 @@ public class Report {
 
     private String title;
     private String imageUrl;
+    private String afterImageUrl;
     private String description;
     private String address;
 
@@ -41,6 +42,7 @@ public class Report {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private LocalDateTime resolvedAt;
 
     @PrePersist
     protected void onCreated() {

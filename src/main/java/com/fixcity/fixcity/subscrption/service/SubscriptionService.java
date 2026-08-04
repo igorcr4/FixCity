@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -177,10 +178,13 @@ public class SubscriptionService {
         }
     }
 
-    public SubscriptionResponse subscriptionResponse(Long municipalityId) {
-        Subscription subscription = repository.findByMunicipalityId(municipalityId).orElseThrow();//personalizata
+    public Optional<SubscriptionResponse> subscriptionResponse(Long municipalityId) {
+        return repository.findByMunicipalityId(municipalityId)
+                .map(subscriptionMapper::toResponse);
+    }
 
-        return subscriptionMapper.toResponse(subscription);
+     Optional<Subscription> findByMunicipalityId(Long municipalityId) {
+        return repository.findByMunicipalityId(municipalityId);
     }
 
     private SubscriptionStatus mapStatus(String status) {

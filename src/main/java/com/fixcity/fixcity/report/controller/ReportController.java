@@ -32,8 +32,9 @@ public class ReportController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReportResponse>> getAllReports() {
-        List<ReportResponse> reports = reportService.getAllReports();
+    public ResponseEntity<List<ReportResponse>> getAllReports(@AuthenticationPrincipal UserPrincipal principal) {
+        Long userId = principal != null ? principal.id() : null;
+        List<ReportResponse> reports = reportService.getAllReports(userId);
         return ResponseEntity.status(HttpStatus.OK).body(reports);
     }
 
@@ -44,14 +45,18 @@ public class ReportController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReportResponse> getReportById(@PathVariable Long id) {
-        ReportResponse report = reportService.getReportById(id);
+    public ResponseEntity<ReportResponse> getReportById(@PathVariable Long id,
+                                                        @AuthenticationPrincipal UserPrincipal principal) {
+        Long userId = principal != null ? principal.id() : null;
+        ReportResponse report = reportService.getReportById(id, userId);
         return ResponseEntity.status(HttpStatus.OK).body(report);
     }
 
     @GetMapping("/by-username")
-    public ResponseEntity<List<ReportResponse>> reportsByUsername(@RequestParam String username) {
-        List<ReportResponse> reports = reportService.findReportsByUsername(username);
+    public ResponseEntity<List<ReportResponse>> reportsByUsername(@RequestParam String username,
+                                                                  @AuthenticationPrincipal UserPrincipal principal) {
+        Long userId = principal != null ? principal.id() : null;
+        List<ReportResponse> reports = reportService.findReportsByUsername(username, userId);
         return ResponseEntity.status(HttpStatus.OK).body(reports);
     }
 

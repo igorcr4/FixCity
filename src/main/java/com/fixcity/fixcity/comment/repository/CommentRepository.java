@@ -1,6 +1,6 @@
 package com.fixcity.fixcity.comment.repository;
 
-import com.fixcity.fixcity.comment.Comment;
+import com.fixcity.fixcity.comment.model.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

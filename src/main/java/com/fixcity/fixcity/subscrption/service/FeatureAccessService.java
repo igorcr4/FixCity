@@ -4,15 +4,15 @@ import com.fixcity.fixcity.subscrption.enumeration.FeatureType;
 import com.fixcity.fixcity.subscrption.enumeration.PlanType;
 import com.fixcity.fixcity.subscrption.model.Subscription;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class FeatureAccessService {
+    private final SubscriptionService subscriptionService;
     private Map<PlanType, Set<FeatureType>> planFeaturesMap;
 
     @PostConstruct
@@ -53,6 +53,12 @@ public class FeatureAccessService {
 
     }
 
+    public boolean hasFeature(Long municipalityId, FeatureType feature) {
+        Optional<Subscription> subscription = subscriptionService.findByMunicipalityId(municipalityId);
+
+        return subscription.map(s -> hasFeature(s, feature)).orElse(false);
+    }
+
     public int getMaxAdminAccounts(PlanType plan) {
 
         if(plan == PlanType.URBAN) {
@@ -61,9 +67,16 @@ public class FeatureAccessService {
             return 7;
         }
     }
+    public Set<FeatureType> getFeaturesForMunicipality(Long municipalityId) {
+        Optional<Subscription> subscription = subscriptionService.findByMunicipalityId(municipalityId);
 
-    public Set<FeatureType> getFeaturesForPlan(PlanType plan) {
-        Map<PlanType, Set<FeatureType>> planFeaturesMap = buildPlanFeaturesMap();
+        if(subscription.isPresent() && subscription.get().isActive()) {
+            return getFeaturesForPlan(subscription.get().getPlan());
+        }
+        return Set.of();
+    }
+
+    private Set<FeatureType> getFeaturesForPlan(PlanType plan) {
 
         if (plan == null) {
             throw new IllegalArgumentException("Planul nu poate fi null.");

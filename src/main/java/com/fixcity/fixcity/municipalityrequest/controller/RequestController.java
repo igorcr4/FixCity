@@ -1,7 +1,8 @@
 package com.fixcity.fixcity.municipalityrequest.controller;
-import com.fixcity.fixcity.municipalityrequest.onboarding.RequestSubmission;
+import com.fixcity.fixcity.municipalityrequest.onboarding.MunicipalityRequestSubmission;
 import com.fixcity.fixcity.municipalityrequest.response.RequestResponse;
 import com.fixcity.fixcity.municipalityrequest.service.RequestService;
+import com.fixcity.fixcity.user.admin.request.PromoteToMunicipalAdminRequest;
 import com.fixcity.fixcity.user.model.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +19,15 @@ public class RequestController {
 
     @PostMapping("/create")
     public ResponseEntity<RequestResponse> createRequest(@AuthenticationPrincipal UserPrincipal user,
-                                                         @RequestBody RequestSubmission submission) {
+                                                         @RequestBody MunicipalityRequestSubmission submission) {
         RequestResponse request = service.createRequest(user.id(), submission);
         return ResponseEntity.ok(request);
     }
 
     @PostMapping("/approve/{requestId}")
     public ResponseEntity<Void> approveRequest(@PathVariable Long requestId,
-                                               @RequestBody String country, String state, String city) {
-        service.approveRequest(requestId, country, state, city);
+                                               @RequestBody PromoteToMunicipalAdminRequest request) {
+        service.approveRequest(requestId, request.country(), request.state(), request.city());
         return ResponseEntity.ok().build();
     }
 

@@ -1,17 +1,15 @@
 package com.fixcity.fixcity.comment.service;
 
-import com.fixcity.fixcity.comment.Comment;
+import com.fixcity.fixcity.comment.model.Comment;
 import com.fixcity.fixcity.comment.repository.CommentRepository;
 import com.fixcity.fixcity.comment.request.CreateCommentRequest;
 import com.fixcity.fixcity.comment.request.EditCommentRequest;
 import com.fixcity.fixcity.comment.response.CommentResponse;
-import com.fixcity.fixcity.report.exception.ReportNotFoundException;
 import com.fixcity.fixcity.report.model.Report;
 import com.fixcity.fixcity.report.service.ReportService;
 import com.fixcity.fixcity.user.model.User;
 import com.fixcity.fixcity.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

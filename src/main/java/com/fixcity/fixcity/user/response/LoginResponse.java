@@ -7,6 +7,7 @@ public record LoginResponse(
         Long userId,
         String username,
         String email,
-        List<String> roles
+        List<String> roles,
+        Long municipalityId
 ) {
 }

@@ -8,6 +8,9 @@ public record RequestResponse(
         Long id,
         RequestStatus status,
         LocalDateTime createdAt,
-        String institutionName
+        String institutionName,
+        String employeePosition,
+        String justification,
+        String username
 ) {
 }

@@ -2,7 +2,7 @@ package com.fixcity.fixcity.municipalityrequest.service;
 
 import com.fixcity.fixcity.municipalityrequest.mapper.MunicipalityRequestMapper;
 import com.fixcity.fixcity.municipalityrequest.model.MunicipalityRequest;
-import com.fixcity.fixcity.municipalityrequest.onboarding.RequestSubmission;
+import com.fixcity.fixcity.municipalityrequest.onboarding.MunicipalityRequestSubmission;
 import com.fixcity.fixcity.municipalityrequest.repository.RequestRepository;
 import com.fixcity.fixcity.municipalityrequest.response.RequestResponse;
 import com.fixcity.fixcity.municipalityrequest.status.RequestStatus;
@@ -25,7 +25,7 @@ public class RequestService {
     private final MunicipalityRequestMapper mapper;
     private final AdminService adminService;
 
-    public RequestResponse createRequest(Long userId, RequestSubmission submission) {
+    public RequestResponse createRequest(Long userId, MunicipalityRequestSubmission submission) {
 
         boolean hasRequest = repository.existsByUser_IdAndStatus(userId, RequestStatus.PENDING);
 

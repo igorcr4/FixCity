@@ -1,4 +1,4 @@
-package com.fixcity.fixcity.comment;
+package com.fixcity.fixcity.comment.model;
 
 import com.fixcity.fixcity.report.model.Report;
 import com.fixcity.fixcity.user.model.User;
@@ -7,9 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 

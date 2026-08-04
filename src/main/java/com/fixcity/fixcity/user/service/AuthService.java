@@ -28,6 +28,10 @@ public class AuthService {
             throw new IncorrectPasswordException();
         }
 
+        Long municipalityId = user.getMunicipality() != null
+                ? user.getMunicipality().getId()
+                : null;
+
         UserPrincipal principal = UserPrincipal.from(user);
         String token = jwtService.generateToken(principal);
 
@@ -41,7 +45,8 @@ public class AuthService {
                 principal.id(),
                 principal.username(),
                 principal.email(),
-                roles
+                roles,
+                municipalityId
         );
     }
 }

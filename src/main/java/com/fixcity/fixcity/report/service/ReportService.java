@@ -1,8 +1,11 @@
 package com.fixcity.fixcity.report.service;
 
+import com.fixcity.fixcity.confirmation.ReportCountProjection;
+import com.fixcity.fixcity.confirmation.repository.ConfirmationRepository;
 import com.fixcity.fixcity.media.ImageUploadService;
 import com.fixcity.fixcity.municipality.model.Municipality;
 import com.fixcity.fixcity.municipality.service.MunicipalityService;
+import com.fixcity.fixcity.report.Status;
 import com.fixcity.fixcity.report.model.Report;
 import com.fixcity.fixcity.report.repository.ReportRepository;
 import com.fixcity.fixcity.report.request.ReportCreateRequest;
@@ -21,7 +24,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +40,7 @@ public class ReportService {
     private final ReportMapper reportMapper;
     private final UserService userService;
     private final MunicipalityService municipalityService;
+    private final ConfirmationRepository confirmationRepository;
 
     public ReportResponse createReport(Long userId, ReportCreateRequest request, MultipartFile file) {
 
@@ -51,43 +60,37 @@ public class ReportService {
         report.setMunicipality(municipality);
 
         repository.save(report);
-        return reportMapper.toResponse(report);
+        return toEnrichedResponses(List.of(report), userId).getFirst();
     }
 
-    @Transactional
-    public List<ReportResponse> getAllReports() {
-        return repository.findAll().stream().map(
-                reportMapper::toResponse
-        ).toList();
+    @Transactional(readOnly = true)
+    public List<ReportResponse> getAllReports(Long currentUserId) {
+        return toEnrichedResponses(repository.findAll(), currentUserId);
     }
 
-    @Transactional
-    public List<ReportResponse> findReportsByUsername(String username) {
+    @Transactional(readOnly = true)
+    public List<ReportResponse> findReportsByUsername(String username, Long currentUserId) {
         User user = userService.findByUsername(username);
 
-        return user.getReports().stream().map(
-                reportMapper::toResponse
-        ).toList();
+        return toEnrichedResponses(new ArrayList<>(user.getReports()), currentUserId);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Report findReportById(Long reportId) {
         return repository.findById(reportId).orElseThrow(ReportNotFoundException::new);
     }
 
-    @Transactional
-    public ReportResponse getReportById(Long reportId) {
+    @Transactional(readOnly = true)
+    public ReportResponse getReportById(Long reportId, Long currentUserId) {
         Report report = repository.findById(reportId).orElseThrow(() -> new RuntimeException("Nu a fost găsit"));//exceptie personalizata
-        return reportMapper.toResponse(report);
+        return toEnrichedResponses(List.of(report), currentUserId).get(0);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ReportResponse> getMyReports(Long userId) {
         User user = userService.findById(userId);
 
-        return user.getReports().stream().map(
-                reportMapper::toResponse
-        ).toList();
+        return toEnrichedResponses(new ArrayList<>(user.getReports()), userId);
     }
 
     @Transactional
@@ -116,8 +119,13 @@ public class ReportService {
             report.setDescription(req.description());
         }
 
-        if(req.status() != null) {
+        if (req.status() != null && isMunicipalAdminForThisReport) {
+            Status previousStatus = report.getStatus();
             report.setStatus(req.status());
+
+            if (previousStatus != Status.RESOLVED && req.status() == Status.RESOLVED) {
+                report.setResolvedAt(LocalDateTime.now());
+            }
         }
 
         if (req.address() != null) {
@@ -136,14 +144,18 @@ public class ReportService {
             report.setCategory(req.category());
         }
 
-        if (file != null && !file.isEmpty()) {
+        if (file != null && !file.isEmpty() && isMunicipalAdminForThisReport) {
+            String afterImageUrl = imageUploadService.uploadImage(file);
+            report.setAfterImageUrl(afterImageUrl);
+
+        } else if (file != null && !file.isEmpty()){
             String imageUrl = imageUploadService.uploadImage(file);
             report.setImageUrl(imageUrl);
         }
 
         report.setUpdatedAt(LocalDateTime.now());
 
-        return reportMapper.toResponse(report);
+        return toEnrichedResponses(List.of(report), userId).getFirst();
     }
 
     @Transactional
@@ -172,9 +184,37 @@ public class ReportService {
         Long municipalityId = user.getMunicipality().getId();
         Municipality municipality = municipalityService.findById(municipalityId);
 
-        return municipality.getReports()
-                .stream()
-                .map(reportMapper::toResponse)
+        return toEnrichedResponses(new ArrayList<>(municipality.getReports()), userId);
+    }
+
+    private Map<Long, Long> getConfirmationCounts(List<Long> reportIds) {
+        if (reportIds.isEmpty()) return Map.of();
+        return confirmationRepository.countByReportIds(reportIds).stream()
+                .collect(Collectors.toMap(
+                        ReportCountProjection::getReportId,
+                        ReportCountProjection::getCnt));
+    }
+
+    private Set<Long> getConfirmedReportIds(Long userId, List<Long> reportIds) {
+        if (userId == null || reportIds.isEmpty()) return Set.of();
+        return new HashSet<>(
+                confirmationRepository.findConfirmedReportIds(userId, reportIds));
+    }
+
+    private List<ReportResponse> toEnrichedResponses(List<Report> reports, Long currentUserId) {
+        List<Long> ids = reports.stream().map(Report::getId).toList();
+
+        Map<Long, Long> counts = getConfirmationCounts(ids);
+        Set<Long> confirmed = getConfirmedReportIds(currentUserId, ids);
+
+        return reports.stream()
+                .map(report -> {
+                    ReportResponse base = reportMapper.toResponse(report);
+                    long count = counts.getOrDefault(report.getId(), 0L);
+                    boolean isConfirmed = confirmed.contains(report.getId());
+                    return base.withConfirmations(count, isConfirmed);
+                })
                 .toList();
     }
+
 }
