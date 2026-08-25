@@ -1,8 +1,4 @@
 package com.fixcity.fixcity.geography.controller;
-
-import com.fixcity.fixcity.csc.response.CscCityResponse;
-import com.fixcity.fixcity.csc.response.CscCountryResponse;
-import com.fixcity.fixcity.csc.response.CscStateResponse;
 import com.fixcity.fixcity.geography.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/geography")
+@RequestMapping("/api/geography")
 public class GeographyController {
     private final GeographyResolver geographyResolver;
     private final GeographyCatalog geographyCatalog;

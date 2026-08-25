@@ -11,6 +11,7 @@ public record AddressResponse(
 
         String country,
         String state,
+        String county,
         String city
 ) {
 }

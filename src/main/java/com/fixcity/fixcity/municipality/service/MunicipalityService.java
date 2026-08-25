@@ -1,9 +1,4 @@
 package com.fixcity.fixcity.municipality.service;
-
-import com.fixcity.fixcity.csc.CountryStateCityClient;
-import com.fixcity.fixcity.csc.response.CscCityResponse;
-import com.fixcity.fixcity.csc.response.CscCountryResponse;
-import com.fixcity.fixcity.csc.response.CscStateResponse;
 import com.fixcity.fixcity.municipality.model.Municipality;
 import com.fixcity.fixcity.municipality.repository.MunicipalityRepository;
 import com.fixcity.fixcity.user.model.User;

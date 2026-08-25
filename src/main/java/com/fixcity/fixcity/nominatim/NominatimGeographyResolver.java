@@ -13,12 +13,13 @@ public class NominatimGeographyResolver implements GeographyResolver {
     @Override
     public AdministrativeLocation resolve(double latitude, double longitude) {
         NominatimResponse response = client.reverse(latitude, longitude);
+        AddressResponse addressResponse = response.address();
 
-        String countryIso2 = response.address().countryCode().toUpperCase();
-        String stateIso2 = response.address().iso3166_2_lvl4().split("-")[1];
-        String country = response.address().country();
-        String state = response.address().state();
-        String city = response.address().city();
+        String countryIso2 = addressResponse.countryCode().toUpperCase();
+        String stateIso2 = addressResponse.iso3166_2_lvl4().split("-")[1];
+        String country = addressResponse.country();
+        String state = firstNonBlank(addressResponse.state(), addressResponse.county());
+        String city = addressResponse.city();
         double responseLatitude = Double.parseDouble(response.latitude());
         double responseLongitude = Double.parseDouble(response.longitude());
 
@@ -31,5 +32,14 @@ public class NominatimGeographyResolver implements GeographyResolver {
                 responseLatitude,
                 responseLongitude
         );
+    }
+
+    private String firstNonBlank(String... values) {
+        for (String value : values) {
+            if(value != null && !value.isBlank()) {
+                return value;
+            }
+        }
+        return null;
     }
 }
