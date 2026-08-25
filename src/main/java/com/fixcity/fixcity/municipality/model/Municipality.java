@@ -11,18 +11,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "municipality")
+@Table(name = "municipality", uniqueConstraints = @UniqueConstraint(
+        name = "uq_municipal_canonical",
+        columnNames = {"country_iso2", "state_iso2", "name_key"}
+))
 @Getter
 @Setter
 @NoArgsConstructor
 public class Municipality {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     private String name;
     private String country;
     private String state;
+
+    @Column(name = "country_iso2")
+    private String countryIso2;
+
+    @Column(name = "state_iso2")
+    private String stateIso2;
+
+    @Column(name = "name_key")
+    private String nameKey;
 
     private String stripeCustomerId;
 

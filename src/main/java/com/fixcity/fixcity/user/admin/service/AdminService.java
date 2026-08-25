@@ -1,7 +1,6 @@
 package com.fixcity.fixcity.user.admin.service;
 
-import com.fixcity.fixcity.subscrption.enumeration.PlanType;
-import com.fixcity.fixcity.subscrption.service.FeatureAccessService;
+import com.fixcity.fixcity.subscription.service.FeatureAccessService;
 import com.fixcity.fixcity.municipality.service.MunicipalityService;
 import com.fixcity.fixcity.municipality.model.Municipality;
 import com.fixcity.fixcity.user.admin.response.AdminUserResponse;
@@ -20,11 +19,12 @@ public class AdminService {
     private final MunicipalityService municipalityService;
     private final FeatureAccessService featureAccessService;
 
-    public void promoteToMunicipalAdmin(Long userId, String country, String state, String city) {
+    public void promoteToMunicipalAdmin(Long userId, String countryIso2, String stateIso2,
+                                        String name, String state, String country) {
 
         User user = userService.findById(userId);
 
-        Municipality municipality = municipalityService.findOrCreateMunicipality(country, state, city);
+        Municipality municipality = municipalityService.findOrCreateMunicipality(countryIso2, stateIso2, name, state, country);
 
         if(!user.getRole().equals(Role.ROLE_MUNICIPAL_ADMIN)) {
             user.setRole(Role.ROLE_MUNICIPAL_ADMIN);

@@ -17,7 +17,8 @@ public class AdminController {
     @PatchMapping("/user/{userId}/promote-municipal-admin")
     public void promoteToMunicipalAdmin(@PathVariable Long userId,
                                         @RequestBody PromoteToMunicipalAdminRequest request) {
-        adminService.promoteToMunicipalAdmin(userId, request.country(), request.state(), request.city());
+        adminService.promoteToMunicipalAdmin(userId, request.countryIso2(), request.stateIso2(),
+                request.name(), request.state(), request.country());
     }
 
     @PatchMapping("/user/{userId}/demote-to-user")

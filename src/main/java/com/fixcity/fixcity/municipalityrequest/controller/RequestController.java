@@ -27,7 +27,9 @@ public class RequestController {
     @PostMapping("/approve/{requestId}")
     public ResponseEntity<Void> approveRequest(@PathVariable Long requestId,
                                                @RequestBody PromoteToMunicipalAdminRequest request) {
-        service.approveRequest(requestId, request.country(), request.state(), request.city());
+        service.approveRequest(requestId, request.countryIso2(), request.stateIso2(),
+                request.name(), request.state(), request.country());
+
         return ResponseEntity.ok().build();
     }
 

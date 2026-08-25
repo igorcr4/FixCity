@@ -1,5 +1,9 @@
 package com.fixcity.fixcity.municipality.service;
 
+import com.fixcity.fixcity.csc.CountryStateCityClient;
+import com.fixcity.fixcity.csc.response.CscCityResponse;
+import com.fixcity.fixcity.csc.response.CscCountryResponse;
+import com.fixcity.fixcity.csc.response.CscStateResponse;
 import com.fixcity.fixcity.municipality.model.Municipality;
 import com.fixcity.fixcity.municipality.repository.MunicipalityRepository;
 import com.fixcity.fixcity.user.model.User;
@@ -7,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.Normalizer;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -15,18 +21,26 @@ public class MunicipalityService {
 
     private final MunicipalityRepository municipalityRepository;
 
-    public Municipality findOrCreateMunicipality(String country, String state, String name) {
-        normalizeText(country);
-        normalizeText(state);
-        normalizeText(name);
+    private static final Pattern DIACRITICS = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
 
-        return municipalityRepository.findByCountryAndStateAndName(country, state, name)
+
+    public Municipality findOrCreateMunicipality(String countryIso2, String stateIso2, String name,
+                                                 String state, String country) {
+
+        String normalizedName = normalizeCityName(name);
+
+        return municipalityRepository.findByCountryIso2AndStateIso2AndNameKey(countryIso2, stateIso2, normalizedName)
                 .orElseGet(
                         () -> {
                             Municipality municipality = new Municipality();
+
                             municipality.setCountry(country);
                             municipality.setState(state);
                             municipality.setName(name);
+
+                            municipality.setCountryIso2(countryIso2);
+                            municipality.setStateIso2(stateIso2);
+                            municipality.setNameKey(normalizedName);
 
                             municipalityRepository.save(municipality);
                             return municipality;
@@ -49,10 +63,12 @@ public class MunicipalityService {
         return municipalityRepository.findById(id).orElseThrow();
     }
 
-    public String normalizeText(String value) {
-        if(value == null) {
-            return "";
-        }
-        return value.toLowerCase().trim();
+    private String normalizeCityName(String cityName) {
+        String name = cityName.toLowerCase().trim();
+
+        name = Normalizer.normalize(name, Normalizer.Form.NFD);
+
+        return DIACRITICS.matcher(name).replaceAll("");
     }
+
 }

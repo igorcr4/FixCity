@@ -47,9 +47,11 @@ public class ReportService {
         User user = userService.findById(userId);
 
         Municipality municipality = municipalityService.findOrCreateMunicipality(
-                request.country(),
-                request.state(),
-                request.city()
+                request.countryIso2(),
+                request.stateIso2(),
+                request.cityName(),
+                request.stateName(),
+                request.countryName()
         );
 
         String imageUrl = imageUploadService.uploadImage(file);

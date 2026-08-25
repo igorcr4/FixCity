@@ -12,4 +12,7 @@ public interface MunicipalityRepository extends JpaRepository<Municipality, Long
     Optional<Municipality> findByCountryAndStateAndName(String country, String state, String name);
 
     Optional<Municipality> findByStripeCustomerId(String customerId);
+
+    Optional<Municipality> findByCountryIso2AndStateIso2AndNameKey(
+            String countryIso2, String stateIso2, String name);
 }

@@ -1,7 +1,7 @@
 package com.fixcity.fixcity.exception;
 
-import com.fixcity.fixcity.geography.csc.exception.CscClientException;
-import com.fixcity.fixcity.geography.csc.exception.CscConfigurationException;
+import com.fixcity.fixcity.csc.exception.CscClientException;
+import com.fixcity.fixcity.csc.exception.CscConfigurationException;
 import com.fixcity.fixcity.user.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

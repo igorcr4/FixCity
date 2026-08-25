@@ -1,7 +1,9 @@
 package com.fixcity.fixcity.user.admin.request;
 
 public record PromoteToMunicipalAdminRequest(
-        String country,
+        String countryIso2,
+        String stateIso2,
+        String name,
         String state,
-        String city
+        String country
 ) {}

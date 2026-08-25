@@ -10,7 +10,9 @@ public record ReportCreateRequest(
         Double latitude,
         Double longitude,
         String address,
-        String country,
-        String state,
-        String city
+        String countryIso2,
+        String stateIso2,
+        String cityName,
+        String stateName,
+        String countryName
 ) {}

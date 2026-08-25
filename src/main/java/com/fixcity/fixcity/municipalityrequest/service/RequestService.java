@@ -49,7 +49,8 @@ public class RequestService {
     }
 
     @Transactional
-    public void approveRequest(Long requestId, String country, String state, String city) {
+    public void approveRequest(Long requestId, String countryIso2, String stateIso2,
+                               String name, String state, String country) {
         MunicipalityRequest request = repository.findById(requestId).orElseThrow();//exceptie personalizata
 
         if(!request.getStatus().equals(RequestStatus.PENDING)) {
@@ -57,7 +58,7 @@ public class RequestService {
         }
         Long userId = request.getUser().getId();
 
-        adminService.promoteToMunicipalAdmin(userId, country, state, city);
+        adminService.promoteToMunicipalAdmin(userId, countryIso2, stateIso2, name, state, country);
         request.setStatus(RequestStatus.APPROVED);
         request.setReviewedAt(LocalDateTime.now());
     }
