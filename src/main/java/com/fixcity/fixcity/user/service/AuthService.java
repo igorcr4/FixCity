@@ -25,7 +25,7 @@ public class AuthService {
         User user = userService.findByEmail(req.email());
 
         if (!passwordEncoder.matches(req.password(), user.getPassword())) {
-            throw new IncorrectPasswordException();
+            throw new IncorrectPasswordException("Invalid email or password.");
         }
 
         Long municipalityId = user.getMunicipality() != null

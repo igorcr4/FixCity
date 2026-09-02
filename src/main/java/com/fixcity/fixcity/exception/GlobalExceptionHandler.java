@@ -2,6 +2,7 @@ package com.fixcity.fixcity.exception;
 
 import com.fixcity.fixcity.csc.exception.CscClientException;
 import com.fixcity.fixcity.csc.exception.CscConfigurationException;
+import com.fixcity.fixcity.geography.LocationNotResolvedException;
 import com.fixcity.fixcity.user.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -112,6 +113,16 @@ public class GlobalExceptionHandler {
                         "Lipsește o parte obligatorie din request.",
                         Instant.now(),
                         "MISSING_REQUEST_PART"
+                ));
+    }
+
+    @ExceptionHandler(LocationNotResolvedException.class)
+    public ResponseEntity<ErrorResponse> handleLocationNotResolved(LocationNotResolvedException ex) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(  new ErrorResponse(
+                        ex.getMessage(),
+                        Instant.now(),
+                        "LOCATION_NOT_RESOLVED"
                 ));
     }
 }

@@ -39,12 +39,15 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(UsernameNotFound::new);
+        return userRepository.findByUsername(username).orElseThrow(
+                () -> new UsernameNotFound("Username not found.")
+        );
     }
 
     @Transactional(readOnly = true)
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(EmailNotFound::new);
+        return userRepository.findByEmail(email).orElseThrow(
+                () ->  new EmailNotFound("User not found."));
     }
 
     @Transactional
@@ -59,13 +62,15 @@ public class UserService {
 
             user.setPassword(newPassword);
         } else {
-            throw new IncorrectPasswordException();
+            throw new IncorrectPasswordException("The password is incorrect.");
         }
     }
 
     @Transactional(readOnly = true)
     public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(UsernameNotFound::new);
+        return userRepository.findById(id).orElseThrow(
+                () -> new UsernameNotFound("User not found.")
+        );
     }
 
     public User getReference(Long userId) {

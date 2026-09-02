@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 public class UserValidation {
     private final UserRepository userRepository;
 
-    String emailRegex = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+    final String emailRegex = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
             + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 
-    String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)" +
+    final String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)" +
             "(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?])\\S{8,}$";
 
     public void validateEmail(String email) {
@@ -30,7 +30,9 @@ public class UserValidation {
 
     public void validatePassword(String password) {
         if(password == null || !password.matches(passwordRegex)) {
-            throw new WeakPasswordException();
+            throw new WeakPasswordException(
+                    "Password must be at least 8 characters and include a lowercase letter, an uppercase letter, a number, and a special character, with no spaces."
+            );
         }
     }
 }
