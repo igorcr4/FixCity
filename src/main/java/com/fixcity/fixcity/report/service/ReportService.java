@@ -42,6 +42,7 @@ public class ReportService {
     private final MunicipalityService municipalityService;
     private final ConfirmationRepository confirmationRepository;
 
+    @Transactional
     public ReportResponse createReport(Long userId, ReportCreateRequest request, MultipartFile file) {
 
         User user = userService.findById(userId);
@@ -85,7 +86,7 @@ public class ReportService {
     @Transactional(readOnly = true)
     public ReportResponse getReportById(Long reportId, Long currentUserId) {
         Report report = repository.findById(reportId).orElseThrow(() -> new RuntimeException("Nu a fost găsit"));//exceptie personalizata
-        return toEnrichedResponses(List.of(report), currentUserId).get(0);
+        return toEnrichedResponses(List.of(report), currentUserId).getFirst();
     }
 
     @Transactional(readOnly = true)
@@ -199,8 +200,7 @@ public class ReportService {
 
     private Set<Long> getConfirmedReportIds(Long userId, List<Long> reportIds) {
         if (userId == null || reportIds.isEmpty()) return Set.of();
-        return new HashSet<>(
-                confirmationRepository.findConfirmedReportIds(userId, reportIds));
+        return new HashSet<>(confirmationRepository.findConfirmedReportIds(userId, reportIds));
     }
 
     private List<ReportResponse> toEnrichedResponses(List<Report> reports, Long currentUserId) {

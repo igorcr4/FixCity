@@ -3,6 +3,7 @@ import com.fixcity.fixcity.municipality.model.Municipality;
 import com.fixcity.fixcity.municipality.repository.MunicipalityRepository;
 import com.fixcity.fixcity.user.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,23 +25,28 @@ public class MunicipalityService {
 
         String normalizedName = normalizeCityName(name);
 
-        return municipalityRepository.findByCountryIso2AndStateIso2AndNameKey(countryIso2, stateIso2, normalizedName)
-                .orElseGet(
-                        () -> {
-                            Municipality municipality = new Municipality();
+        try {
+            return municipalityRepository.findByCountryIso2AndStateIso2AndNameKey(countryIso2, stateIso2, normalizedName)
+                    .orElseGet(
+                            () -> {
+                                Municipality municipality = new Municipality();
 
-                            municipality.setCountry(country);
-                            municipality.setState(state);
-                            municipality.setName(name);
+                                municipality.setCountry(country);
+                                municipality.setState(state);
+                                municipality.setName(name);
 
-                            municipality.setCountryIso2(countryIso2);
-                            municipality.setStateIso2(stateIso2);
-                            municipality.setNameKey(normalizedName);
+                                municipality.setCountryIso2(countryIso2);
+                                municipality.setStateIso2(stateIso2);
+                                municipality.setNameKey(normalizedName);
 
-                            municipalityRepository.save(municipality);
-                            return municipality;
-                        }
-                );
+                                municipalityRepository.saveAndFlush(municipality);
+                                return municipality;
+                            }
+                    );
+        }catch (DataIntegrityViolationException ex) {
+            return municipalityRepository.findByCountryIso2AndStateIso2AndNameKey(countryIso2, stateIso2, normalizedName).orElseThrow();
+        }
+
     }
 
     public int getMunicipalityAdmins(Municipality municipality) {
@@ -58,7 +64,7 @@ public class MunicipalityService {
         return municipalityRepository.findById(id).orElseThrow();
     }
 
-    private String normalizeCityName(String cityName) {
+    private static String normalizeCityName(String cityName) {
         String name = cityName.toLowerCase().trim();
 
         name = Normalizer.normalize(name, Normalizer.Form.NFD);
