@@ -119,7 +119,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(LocationNotResolvedException.class)
     public ResponseEntity<ErrorResponse> handleLocationNotResolved(LocationNotResolvedException ex) {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-                .body(  new ErrorResponse(
+                .body(new ErrorResponse(
                         ex.getMessage(),
                         Instant.now(),
                         "LOCATION_NOT_RESOLVED"
