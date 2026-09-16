@@ -1,4 +1,6 @@
 package com.fixcity.fixcity.municipality.service;
+import com.fixcity.fixcity.municipality.exception.MunicipalityNotFoundException;
+import com.fixcity.fixcity.municipality.exception.MunicipalityResolutionException;
 import com.fixcity.fixcity.municipality.model.Municipality;
 import com.fixcity.fixcity.municipality.repository.MunicipalityRepository;
 import com.fixcity.fixcity.user.model.User;
@@ -44,7 +46,8 @@ public class MunicipalityService {
                             }
                     );
         }catch (DataIntegrityViolationException ex) {
-            return municipalityRepository.findByCountryIso2AndStateIso2AndNameKey(countryIso2, stateIso2, normalizedName).orElseThrow();
+            return municipalityRepository.findByCountryIso2AndStateIso2AndNameKey(countryIso2, stateIso2, normalizedName)
+                    .orElseThrow(() -> new MunicipalityResolutionException(ex));
         }
 
     }
@@ -55,13 +58,13 @@ public class MunicipalityService {
     }
 
     public Municipality findByStripeCustomerId(String customerId) {
-        return municipalityRepository.findByStripeCustomerId(customerId).orElseThrow();//exceptie personalizata
+        return municipalityRepository.findByStripeCustomerId(customerId).orElseThrow(MunicipalityNotFoundException::new);
     }
 
 
     @Transactional(readOnly = true)
     public Municipality findById(Long id) {
-        return municipalityRepository.findById(id).orElseThrow();
+        return municipalityRepository.findById(id).orElseThrow(MunicipalityNotFoundException::new);
     }
 
     private static String normalizeCityName(String cityName) {

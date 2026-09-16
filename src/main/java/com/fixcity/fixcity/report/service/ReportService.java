@@ -12,6 +12,7 @@ import com.fixcity.fixcity.report.request.ReportCreateRequest;
 import com.fixcity.fixcity.report.response.ReportResponse;
 import com.fixcity.fixcity.report.request.ReportUpdateRequest;
 import com.fixcity.fixcity.report.exception.ModifyReportException;
+import com.fixcity.fixcity.report.exception.MunicipalityNotAssignedException;
 import com.fixcity.fixcity.report.exception.ReportNotFoundException;
 import com.fixcity.fixcity.report.mapper.ReportMapper;
 import com.fixcity.fixcity.user.role.Role;
@@ -85,7 +86,7 @@ public class ReportService {
 
     @Transactional(readOnly = true)
     public ReportResponse getReportById(Long reportId, Long currentUserId) {
-        Report report = repository.findById(reportId).orElseThrow(() -> new RuntimeException("Nu a fost găsit"));//exceptie personalizata
+        Report report = repository.findById(reportId).orElseThrow(ReportNotFoundException::new);
         return toEnrichedResponses(List.of(report), currentUserId).getFirst();
     }
 
@@ -181,7 +182,7 @@ public class ReportService {
         }
 
         if (user.getMunicipality() == null) {
-            throw new IllegalStateException("User-ul nu are o primarie asociata!");
+            throw new MunicipalityNotAssignedException();
         }
 
         Long municipalityId = user.getMunicipality().getId();

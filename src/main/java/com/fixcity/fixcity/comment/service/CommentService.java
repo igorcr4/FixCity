@@ -1,5 +1,7 @@
 package com.fixcity.fixcity.comment.service;
 
+import com.fixcity.fixcity.comment.exception.CommentNotFoundException;
+import com.fixcity.fixcity.comment.exception.NotCommentOwnerException;
 import com.fixcity.fixcity.comment.model.Comment;
 import com.fixcity.fixcity.comment.repository.CommentRepository;
 import com.fixcity.fixcity.comment.request.CreateCommentRequest;
@@ -90,7 +92,7 @@ public class CommentService {
         boolean isCommentOwner = comment.getUser().getId().equals(userId);
 
         if(!isCommentOwner) {
-            throw new IllegalArgumentException();//exceptie personalizata trebuie sa adaug
+            throw new NotCommentOwnerException();
         } else {
             comment.setText(request.text());
             comment.setUpdatedAt(LocalDateTime.now());
@@ -113,7 +115,7 @@ public class CommentService {
 
     @Transactional
     public Comment findCommentById(Long commentId) {
-        return repository.findById(commentId).orElseThrow();//exceptie personalizata
+        return repository.findById(commentId).orElseThrow(CommentNotFoundException::new);
     }
 
 

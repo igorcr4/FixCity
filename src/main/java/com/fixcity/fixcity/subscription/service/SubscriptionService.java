@@ -7,6 +7,9 @@ import com.fixcity.fixcity.subscription.enumeration.SubscriptionStatus;
 import com.fixcity.fixcity.subscription.mapper.SubscriptionMapper;
 import com.fixcity.fixcity.subscription.model.Subscription;
 import com.fixcity.fixcity.subscription.repository.SubscriptionRepository;
+import com.fixcity.fixcity.subscription.exception.StripeOperationException;
+import com.fixcity.fixcity.subscription.exception.SubscriptionNotFoundException;
+import com.fixcity.fixcity.subscription.exception.WebhookProcessingException;
 import com.fixcity.fixcity.subscription.request.CheckoutRequest;
 import com.fixcity.fixcity.subscription.response.CheckoutResponse;
 import com.fixcity.fixcity.subscription.response.SubscriptionResponse;
@@ -71,7 +74,7 @@ public class SubscriptionService {
                 Customer customer = Customer.create(params);
                 municipality.setStripeCustomerId(customer.getId());
             } catch (StripeException e) {
-                throw new RuntimeException(e);//trebuie sa adaug o exceptie personalizata dupa
+                throw new StripeOperationException(e);
             }
         }
 
@@ -94,7 +97,7 @@ public class SubscriptionService {
             return new CheckoutResponse(session.getUrl());
 
         } catch (StripeException e) {
-            throw new RuntimeException(e);//exceptie personalizata
+            throw new StripeOperationException(e);
         }
     }
 
@@ -108,7 +111,7 @@ public class SubscriptionService {
                 case "checkout.session.completed" -> {
                     Session session = (Session) event.getDataObjectDeserializer()
                             .getObject()
-                            .orElseThrow(); //exceptie personalizata
+                            .orElseThrow(WebhookProcessingException::new);
 
                     String customerId = session.getCustomer();
                     String stripeSubscriptionId = session.getSubscription();
@@ -137,13 +140,13 @@ public class SubscriptionService {
                     com.stripe.model.Subscription stripeSubscription = (com.stripe.model.Subscription) event
                             .getDataObjectDeserializer()
                             .getObject()
-                            .orElseThrow();//exceptie personalizata
+                            .orElseThrow(WebhookProcessingException::new);
 
                     String stripeSubscriptionId = stripeSubscription.getId();
                     boolean cancelAtPeriodEnd = stripeSubscription.getCancelAtPeriodEnd();
                     SubscriptionItem item = stripeSubscription.getItems().getData().getFirst();
 
-                    Subscription subscription = repository.findByStripeSubscriptionId(stripeSubscriptionId).orElseThrow();//personalizata
+                    Subscription subscription = repository.findByStripeSubscriptionId(stripeSubscriptionId).orElseThrow(SubscriptionNotFoundException::new);
 
                     subscription.setStatus(mapStatus(stripeSubscription.getStatus()));
                     subscription.setCancelAtPeriodEnd(cancelAtPeriodEnd);
@@ -159,12 +162,12 @@ public class SubscriptionService {
                     com.stripe.model.Subscription stripeSubscription = (com.stripe.model.Subscription) event
                             .getDataObjectDeserializer()
                             .getObject()
-                            .orElseThrow();//exceptie personalizata
+                            .orElseThrow(WebhookProcessingException::new);
 
                     String stripeSubscriptionId = stripeSubscription.getId();
                     Long canceledAt = stripeSubscription.getCanceledAt();
 
-                    Subscription subscription = repository.findByStripeSubscriptionId(stripeSubscriptionId).orElseThrow();//personalizata
+                    Subscription subscription = repository.findByStripeSubscriptionId(stripeSubscriptionId).orElseThrow(SubscriptionNotFoundException::new);
                     subscription.setStatus(mapStatus(stripeSubscription.getStatus()));
                     subscription.setCanceledAt(
                             LocalDateTime.ofEpochSecond(canceledAt, 0 ,ZoneOffset.UTC)
@@ -172,9 +175,9 @@ public class SubscriptionService {
                 }
             }
         } catch (SignatureVerificationException e) {
-            throw new RuntimeException(e); // exceptie personalizata
+            throw new StripeOperationException(e);
         } catch (StripeException e) {
-            throw new RuntimeException(e); // exceptie personalizata
+            throw new StripeOperationException(e);
         }
     }
 

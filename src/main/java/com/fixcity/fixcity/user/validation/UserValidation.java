@@ -1,6 +1,8 @@
 package com.fixcity.fixcity.user.validation;
 
 import com.fixcity.fixcity.user.repository.UserRepository;
+import com.fixcity.fixcity.user.exception.EmailTakenException;
+import com.fixcity.fixcity.user.exception.UsernameTakenException;
 import com.fixcity.fixcity.user.exception.WeakPasswordException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,13 +20,13 @@ public class UserValidation {
 
     public void validateEmail(String email) {
         if(email == null || userRepository.existsByEmail(email) || !email.matches(emailRegex)) {
-            throw new RuntimeException("Email: " + email + " este invalid sau deja exista!");
+            throw new EmailTakenException("Email: " + email + " este invalid sau deja exista!");
         }
     }
 
     public void validateUsername(String username) {
         if(username == null || userRepository.existsByUsername(username)) {
-            throw new RuntimeException("Email: " + username + " este invalid sau deja exista!");
+            throw new UsernameTakenException("Username: " + username + " este invalid sau deja exista!");
         }
     }
 

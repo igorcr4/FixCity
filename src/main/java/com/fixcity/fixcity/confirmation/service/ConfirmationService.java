@@ -1,5 +1,7 @@
 package com.fixcity.fixcity.confirmation.service;
 
+import com.fixcity.fixcity.confirmation.exception.CannotConfirmOwnReportException;
+import com.fixcity.fixcity.confirmation.exception.ReportAlreadyResolvedException;
 import com.fixcity.fixcity.confirmation.model.Confirmation;
 import com.fixcity.fixcity.confirmation.repository.ConfirmationRepository;
 import com.fixcity.fixcity.confirmation.response.ConfirmationResponse;
@@ -26,11 +28,11 @@ public class ConfirmationService {
         Report report = reportService.findReportById(reportId);
 
         if(report.getUser().getId().equals(userId)) {
-            throw new IllegalArgumentException();//exceptie personalizata
+            throw new CannotConfirmOwnReportException();
         }
 
         if(report.getStatus() == Status.RESOLVED) {
-            throw new IllegalArgumentException();//exceptie personalizata
+            throw new ReportAlreadyResolvedException();
         }
 
         User user = userService.getReference(userId);

@@ -1,5 +1,8 @@
 package com.fixcity.fixcity.municipalityrequest.service;
 
+import com.fixcity.fixcity.municipalityrequest.exception.DuplicateRequestException;
+import com.fixcity.fixcity.municipalityrequest.exception.RequestNotFoundException;
+import com.fixcity.fixcity.municipalityrequest.exception.RequestNotPendingException;
 import com.fixcity.fixcity.municipalityrequest.mapper.MunicipalityRequestMapper;
 import com.fixcity.fixcity.municipalityrequest.model.MunicipalityRequest;
 import com.fixcity.fixcity.municipalityrequest.onboarding.MunicipalityRequestSubmission;
@@ -9,7 +12,6 @@ import com.fixcity.fixcity.municipalityrequest.status.RequestStatus;
 import com.fixcity.fixcity.user.admin.service.AdminService;
 import com.fixcity.fixcity.user.model.User;
 import com.fixcity.fixcity.user.service.UserService;
-import com.sun.jdi.request.InvalidRequestStateException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +32,7 @@ public class RequestService {
         boolean hasRequest = repository.existsByUser_IdAndStatus(userId, RequestStatus.PENDING);
 
         if(hasRequest) {
-            throw new InvalidRequestStateException();//exceptie personalizata
+            throw new DuplicateRequestException();
         }
 
         User user = userService.findById(userId);
@@ -51,10 +53,10 @@ public class RequestService {
     @Transactional
     public void approveRequest(Long requestId, String countryIso2, String stateIso2,
                                String name, String state, String country) {
-        MunicipalityRequest request = repository.findById(requestId).orElseThrow();//exceptie personalizata
+        MunicipalityRequest request = repository.findById(requestId).orElseThrow(RequestNotFoundException::new);
 
         if(!request.getStatus().equals(RequestStatus.PENDING)) {
-            throw new IllegalArgumentException();//exceptie personalizata
+            throw new RequestNotPendingException();
         }
         Long userId = request.getUser().getId();
 
@@ -65,10 +67,10 @@ public class RequestService {
 
     @Transactional
     public void rejectRequest(Long requestId) {
-        MunicipalityRequest request = repository.findById(requestId).orElseThrow();//exceptie personalizata
+        MunicipalityRequest request = repository.findById(requestId).orElseThrow(RequestNotFoundException::new);
 
         if(!request.getStatus().equals(RequestStatus.PENDING)) {
-            throw new InvalidRequestStateException();//exceptie personalizata
+            throw new RequestNotPendingException();
         }
 
         request.setStatus(RequestStatus.REJECTED);

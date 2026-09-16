@@ -2,6 +2,8 @@ package com.fixcity.fixcity.media;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.fixcity.fixcity.report.exception.ImageUploadFailedException;
+import com.fixcity.fixcity.report.exception.UploadImageException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +19,7 @@ public class ImageUploadService {
     public String uploadImage(MultipartFile file) {
         String contentType = file.getContentType();
         if(contentType == null || !contentType.startsWith("image/")) {
-            throw new RuntimeException("Imagine invalida"); // trebuie sa creez un exception handler personalizat
+            throw new UploadImageException();
         }
         try {
             Map<String, Object> image = ObjectUtils.asMap(
@@ -33,7 +35,7 @@ public class ImageUploadService {
             return res.get("secure_url").toString();
 
         }catch (IOException e) {
-            throw new RuntimeException("Eroare la upload", e);// trebuie sa creez un exception handler personalizat
+            throw new ImageUploadFailedException(e);
         }
     }
 }
