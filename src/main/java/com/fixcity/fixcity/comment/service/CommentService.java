@@ -25,6 +25,7 @@ public class CommentService {
     private final UserService userService;
     private final ReportService reportService;
 
+    @Transactional
     public CommentResponse createComment(Long userId, Long reportId, CreateCommentRequest request) {
         Report report = reportService.findReportById(reportId);
         User user = userService.findById(userId);
@@ -57,6 +58,7 @@ public class CommentService {
         );
     }
 
+    @Transactional(readOnly = true)
     public List<CommentResponse> getCommentsByReport(Long reportId, Long userId) {
         Report report = reportService.findReportById(reportId);
 
@@ -80,6 +82,7 @@ public class CommentService {
         }).toList();
     }
 
+    @Transactional
     public void deleteComment(Long commentId) {
 
         //sa adaug validari cine poate sterge si cine nu
@@ -87,6 +90,7 @@ public class CommentService {
         repository.delete(comment);
     }
 
+    @Transactional
     public CommentResponse editComment (Long commentId, Long userId, EditCommentRequest request) {
         Comment comment = findCommentById(commentId);
         boolean isCommentOwner = comment.getUser().getId().equals(userId);
@@ -113,7 +117,7 @@ public class CommentService {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Comment findCommentById(Long commentId) {
         return repository.findById(commentId).orElseThrow(CommentNotFoundException::new);
     }

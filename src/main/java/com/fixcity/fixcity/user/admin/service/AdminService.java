@@ -10,6 +10,7 @@ import com.fixcity.fixcity.user.repository.UserRepository;
 import com.fixcity.fixcity.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class AdminService {
     private final MunicipalityService municipalityService;
     private final FeatureAccessService featureAccessService;
 
+    @Transactional
     public void promoteToMunicipalAdmin(Long userId, String countryIso2, String stateIso2,
                                         String name, String state, String country) {
 
@@ -34,6 +36,7 @@ public class AdminService {
         userRepository.save(user);
     }
 
+    @Transactional
     public void demoteMunicipalAdminToUser(Long userId) {
 
         User user = userService.findById(userId);
@@ -46,6 +49,7 @@ public class AdminService {
         userRepository.save(user);
     }
 
+    @Transactional(readOnly = true)
     public AdminUserResponse findByUsername(String username) {
         User user = userService.findByUsername(username);
 

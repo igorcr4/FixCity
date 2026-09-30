@@ -181,6 +181,7 @@ public class SubscriptionService {
         }
     }
 
+    @Transactional(readOnly = true)
     public Optional<SubscriptionResponse> subscriptionResponse(Long municipalityId) {
         return repository.findByMunicipalityId(municipalityId)
                 .map(subscriptionMapper::toResponse);

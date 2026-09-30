@@ -27,6 +27,7 @@ public class RequestService {
     private final MunicipalityRequestMapper mapper;
     private final AdminService adminService;
 
+    @Transactional
     public RequestResponse createRequest(Long userId, MunicipalityRequestSubmission submission) {
 
         boolean hasRequest = repository.existsByUser_IdAndStatus(userId, RequestStatus.PENDING);
@@ -77,6 +78,7 @@ public class RequestService {
         request.setReviewedAt(LocalDateTime.now());
     }
 
+    @Transactional(readOnly = true)
     public List<RequestResponse> getPendingRequests() {
         return repository.findByStatus(RequestStatus.PENDING).stream()
                 .map(mapper::toResponse)

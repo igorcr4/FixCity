@@ -19,6 +19,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserValidation userValidation;
 
+    @Transactional
     public void registerUser(String username, String email, String password) {
         User user = new User();
 

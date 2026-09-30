@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class AuthService {
     private final UserService userService;
     private final JwtService jwtService;
 
+    @Transactional(readOnly = true)
     public LoginResponse login(LoginRequest req) {
         User user = userService.findByEmail(req.email());
 

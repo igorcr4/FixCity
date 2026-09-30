@@ -6,6 +6,7 @@ import com.fixcity.fixcity.subscription.model.Subscription;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -53,6 +54,7 @@ public class FeatureAccessService {
 
     }
 
+    @Transactional(readOnly = true)
     public boolean hasFeature(Long municipalityId, FeatureType feature) {
         Optional<Subscription> subscription = subscriptionService.findByMunicipalityId(municipalityId);
 
@@ -67,6 +69,7 @@ public class FeatureAccessService {
             return 7;
         }
     }
+    @Transactional(readOnly = true)
     public Set<FeatureType> getFeaturesForMunicipality(Long municipalityId) {
         Optional<Subscription> subscription = subscriptionService.findByMunicipalityId(municipalityId);
 

@@ -57,6 +57,7 @@ public class MunicipalityService {
         return users.size();
     }
 
+    @Transactional(readOnly = true)
     public Municipality findByStripeCustomerId(String customerId) {
         return municipalityRepository.findByStripeCustomerId(customerId).orElseThrow(MunicipalityNotFoundException::new);
     }
