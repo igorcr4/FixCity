@@ -48,7 +48,7 @@ public class CountryStateCityClient {
     }
 
     public List<CscCountryResponse> getCountries() {
-        return getList("/countries", COUNTRY_LIST, "Nu am putut incarca lista de tari de la CSC.");
+        return getList("/countries", COUNTRY_LIST, "Could not load the list of countries from CSC.");
     }
 
     public List<CscStateResponse> getStates(String countryIso2) {
@@ -56,7 +56,7 @@ public class CountryStateCityClient {
         return getList(
                 "/countries/{countryIso2}/states",
                 STATE_LIST,
-                "Nu am putut incarca lista de regiuni pentru tara selectata.",
+                "Could not load the list of regions for the selected country.",
                 countryIso2.toUpperCase()
         );
     }
@@ -67,7 +67,7 @@ public class CountryStateCityClient {
         return getList(
                 "/countries/{countryIso2}/states/{stateIso2}/cities",
                 CITY_LIST,
-                "Nu am putut incarca lista de orase pentru regiunea selectata.",
+                "Could not load the list of cities for the selected region.",
                 countryIso2.toUpperCase(),
                 stateIso2.toUpperCase()
         );
@@ -78,23 +78,23 @@ public class CountryStateCityClient {
         return getList(
                 "/countries/{countryIso2}/cities",
                 CITY_LIST,
-                "Nu am putut incarca lista de orase pentru tara selectata.",
+                "Could not load the list of cities for the selected country.",
                 countryIso2.toUpperCase()
         );
     }
 
     private void ensureConfigured() {
         if (!StringUtils.hasText(properties.baseUrl())) {
-            throw new CscConfigurationException("CSC base URL nu este configurat.");
+            throw new CscConfigurationException("CSC base URL is not configured.");
         }
         if (!StringUtils.hasText(properties.apiKey())) {
-            throw new CscConfigurationException("CSC API key nu este configurat.");
+            throw new CscConfigurationException("CSC API key is not configured.");
         }
     }
 
     private void requirePathValue(String value, String fieldName) {
         if (!StringUtils.hasText(value)) {
-            throw new IllegalArgumentException(fieldName + " este obligatoriu.");
+            throw new IllegalArgumentException(fieldName + " is required.");
         }
     }
 }

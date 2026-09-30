@@ -13,7 +13,7 @@ import com.fixcity.fixcity.municipalityrequest.exception.DuplicateRequestExcepti
 import com.fixcity.fixcity.municipalityrequest.exception.RequestNotFoundException;
 import com.fixcity.fixcity.municipalityrequest.exception.RequestNotPendingException;
 import com.fixcity.fixcity.report.exception.ImageUploadFailedException;
-import com.fixcity.fixcity.report.exception.ModifyReportException;
+import com.fixcity.fixcity.report.exception.ReportAccessDeniedException;
 import com.fixcity.fixcity.report.exception.MunicipalityNotAssignedException;
 import com.fixcity.fixcity.report.exception.ReportNotFoundException;
 import com.fixcity.fixcity.report.exception.UploadImageException;
@@ -117,7 +117,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleUnreadableRequest(HttpMessageNotReadableException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(
-                        "Datele trimise nu sunt valide.",
+                        "The submitted data is invalid.",
                         Instant.now(),
                         "INVALID_REQUEST_BODY"
                 ));
@@ -127,7 +127,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleMissingRequestPart(MissingServletRequestPartException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(
-                        "Lipsește o parte obligatorie din request.",
+                        "A required part of the request is missing.",
                         Instant.now(),
                         "MISSING_REQUEST_PART"
                 ));
@@ -243,8 +243,8 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    @ExceptionHandler(ModifyReportException.class)
-    public ResponseEntity<ErrorResponse> handleModifyReport(ModifyReportException ex) {
+    @ExceptionHandler(ReportAccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleModifyReport(ReportAccessDeniedException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ErrorResponse(
                         ex.getMessage(),

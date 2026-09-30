@@ -11,7 +11,7 @@ import com.fixcity.fixcity.report.repository.ReportRepository;
 import com.fixcity.fixcity.report.request.ReportCreateRequest;
 import com.fixcity.fixcity.report.response.ReportResponse;
 import com.fixcity.fixcity.report.request.ReportUpdateRequest;
-import com.fixcity.fixcity.report.exception.ModifyReportException;
+import com.fixcity.fixcity.report.exception.ReportAccessDeniedException;
 import com.fixcity.fixcity.report.exception.MunicipalityNotAssignedException;
 import com.fixcity.fixcity.report.exception.ReportNotFoundException;
 import com.fixcity.fixcity.report.mapper.ReportMapper;
@@ -112,7 +112,7 @@ public class ReportService {
                         && user.getMunicipality().getId().equals(report.getMunicipality().getId());
 
         if (!isOwner && !isMunicipalAdminForThisReport) {
-            throw new ModifyReportException();
+            throw new ReportAccessDeniedException();
         }
 
         if(req.title() != null && isOwner) {
@@ -167,7 +167,7 @@ public class ReportService {
         Report report = repository.findById(reportId).orElseThrow(ReportNotFoundException::new);
 
         if(!report.getUser().getId().equals(userId)){
-            throw new ModifyReportException();
+            throw new ReportAccessDeniedException();
         }
 
         repository.delete(report);
@@ -178,7 +178,7 @@ public class ReportService {
         User user = userService.findById(userId);
 
         if (user.getRole() != Role.ROLE_MUNICIPAL_ADMIN) {
-            throw new AccessDeniedException("User-ul nu are drepturi de admin!");
+            throw new AccessDeniedException("The user does not have admin rights.");
         }
 
         if (user.getMunicipality() == null) {

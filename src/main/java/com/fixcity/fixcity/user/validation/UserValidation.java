@@ -20,13 +20,13 @@ public class UserValidation {
 
     public void validateEmail(String email) {
         if(email == null || userRepository.existsByEmail(email) || !email.matches(emailRegex)) {
-            throw new EmailTakenException("Email: " + email + " este invalid sau deja exista!");
+            throw new EmailTakenException("Email: " + email + " is invalid or already exists.");
         }
     }
 
     public void validateUsername(String username) {
         if(username == null || userRepository.existsByUsername(username)) {
-            throw new UsernameTakenException("Username: " + username + " este invalid sau deja exista!");
+            throw new UsernameTakenException("Username: " + username + " is invalid or already exists.");
         }
     }
 

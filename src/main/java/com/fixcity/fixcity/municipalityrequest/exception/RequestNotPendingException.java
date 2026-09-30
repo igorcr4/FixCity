@@ -2,6 +2,6 @@ package com.fixcity.fixcity.municipalityrequest.exception;
 
 public final class RequestNotPendingException extends RequestException {
     public RequestNotPendingException() {
-        super("Cererea nu este în așteptare și nu poate fi procesată.");
+        super("The request is not pending and cannot be processed.");
     }
 }

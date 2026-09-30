@@ -2,6 +2,6 @@ package com.fixcity.fixcity.confirmation.exception;
 
 public final class CannotConfirmOwnReportException extends ConfirmationException {
     public CannotConfirmOwnReportException() {
-        super("Nu îți poți confirma propriul raport.");
+        super("You cannot confirm your own report.");
     }
 }

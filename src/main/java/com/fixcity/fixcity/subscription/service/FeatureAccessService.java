@@ -79,11 +79,11 @@ public class FeatureAccessService {
     private Set<FeatureType> getFeaturesForPlan(PlanType plan) {
 
         if (plan == null) {
-            throw new IllegalArgumentException("Planul nu poate fi null.");
+            throw new IllegalArgumentException("The plan cannot be null.");
         }
 
         if (!planFeaturesMap.containsKey(plan)) {
-            throw new IllegalArgumentException("Nu exista functionalitati definite pentru planul: " + plan);
+            throw new IllegalArgumentException("No features are defined for plan: " + plan);
         }
 
         return planFeaturesMap.get(plan);
