@@ -16,7 +16,7 @@ import com.fixcity.fixcity.report.exception.ImageUploadFailedException;
 import com.fixcity.fixcity.report.exception.ReportAccessDeniedException;
 import com.fixcity.fixcity.report.exception.MunicipalityNotAssignedException;
 import com.fixcity.fixcity.report.exception.ReportNotFoundException;
-import com.fixcity.fixcity.report.exception.UploadImageException;
+import com.fixcity.fixcity.report.exception.InvalidImageException;
 import com.fixcity.fixcity.subscription.exception.StripeOperationException;
 import com.fixcity.fixcity.subscription.exception.SubscriptionNotFoundException;
 import com.fixcity.fixcity.subscription.exception.WebhookProcessingException;
@@ -43,8 +43,8 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    @ExceptionHandler(EmailNotFound.class)
-    public ResponseEntity<ErrorResponse> handleEmailNotFound(EmailNotFound ex) {
+    @ExceptionHandler(EmailNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleEmailNotFound(EmailNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(
                         ex.getMessage(),
@@ -73,8 +73,8 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    @ExceptionHandler(UsernameNotFound.class)
-    public ResponseEntity<ErrorResponse> handleUsernameNotFound(UsernameNotFound ex) {
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUsernameNotFound(UsernameNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(
                         ex.getMessage(),
@@ -143,8 +143,8 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    @ExceptionHandler(UploadImageException.class)
-    public ResponseEntity<ErrorResponse> handleUploadImage(UploadImageException ex) {
+    @ExceptionHandler(InvalidImageException.class)
+    public ResponseEntity<ErrorResponse> handleUploadImage(InvalidImageException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(
                         ex.getMessage(),

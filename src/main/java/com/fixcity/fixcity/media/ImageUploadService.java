@@ -3,7 +3,7 @@ package com.fixcity.fixcity.media;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.fixcity.fixcity.report.exception.ImageUploadFailedException;
-import com.fixcity.fixcity.report.exception.UploadImageException;
+import com.fixcity.fixcity.report.exception.InvalidImageException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +19,7 @@ public class ImageUploadService {
     public String uploadImage(MultipartFile file) {
         String contentType = file.getContentType();
         if(contentType == null || !contentType.startsWith("image/")) {
-            throw new UploadImageException();
+            throw new InvalidImageException();
         }
         try {
             Map<String, Object> image = ObjectUtils.asMap(

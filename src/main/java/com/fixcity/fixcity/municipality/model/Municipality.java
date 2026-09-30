@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "municipality", uniqueConstraints = @UniqueConstraint(
+@Table(name = "municipalities", uniqueConstraints = @UniqueConstraint(
         name = "uq_municipal_canonical",
         columnNames = {"country_iso2", "state_iso2", "name_key"}
 ))

@@ -1,7 +1,7 @@
 package com.fixcity.fixcity.report.exception;
 
 public abstract sealed class ReportException extends RuntimeException
-permits UploadImageException, ReportNotFoundException, ReportAccessDeniedException,
+permits InvalidImageException, ReportNotFoundException, ReportAccessDeniedException,
         ImageUploadFailedException, MunicipalityNotAssignedException {
 
     public ReportException(String message) {

@@ -2,17 +2,14 @@ package com.fixcity.fixcity.user.service;
 
 import com.fixcity.fixcity.user.model.User;
 import com.fixcity.fixcity.user.repository.UserRepository;
-import com.fixcity.fixcity.user.exception.EmailNotFound;
+import com.fixcity.fixcity.user.exception.EmailNotFoundException;
 import com.fixcity.fixcity.user.exception.IncorrectPasswordException;
-import com.fixcity.fixcity.user.exception.UsernameNotFound;
+import com.fixcity.fixcity.user.exception.UsernameNotFoundException;
 import com.fixcity.fixcity.user.validation.UserValidation;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.lang.annotation.Before;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -40,14 +37,14 @@ public class UserService {
     @Transactional(readOnly = true)
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFound("Username not found.")
+                () -> new UsernameNotFoundException("Username not found.")
         );
     }
 
     @Transactional(readOnly = true)
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(
-                () ->  new EmailNotFound("User not found."));
+                () ->  new EmailNotFoundException("User not found."));
     }
 
     @Transactional
@@ -69,7 +66,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(
-                () -> new UsernameNotFound("User not found.")
+                () -> new UsernameNotFoundException("User not found.")
         );
     }
 

@@ -9,7 +9,11 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "report_id"}))
+@Table(name = "confirmations",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uq_confirmation_user_report",
+                columnNames = {"user_id", "report_id"})
+)
 @Getter
 @Setter
 public class Confirmation {
