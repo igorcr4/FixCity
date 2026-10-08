@@ -1,5 +1,6 @@
 package com.fixcity.fixcity.subscription.service;
 
+import com.fixcity.fixcity.config.AppProperties;
 import com.fixcity.fixcity.municipality.model.Municipality;
 import com.fixcity.fixcity.municipality.service.MunicipalityService;
 import com.fixcity.fixcity.subscription.enumeration.PlanType;
@@ -39,6 +40,7 @@ public class SubscriptionService {
     private final SubscriptionRepository repository;
     private final MunicipalityService municipalityService;
     private final SubscriptionMapper subscriptionMapper;
+    private final AppProperties appProperties;
 
     @Value("${stripe.price.urban}")
     private String priceUrban;
@@ -90,8 +92,8 @@ public class SubscriptionService {
                             )
                             .putMetadata("plan", request.plan().name())
                             .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
-                            .setSuccessUrl("http://localhost:3030/subscription/success")
-                            .setCancelUrl("http://localhost:3030/subscription/cancel")
+                            .setSuccessUrl(appProperties.frontendUrl() + "/subscription/success")
+                            .setCancelUrl(appProperties.frontendUrl() + "/subscription/cancel")
                             .build();
             Session session = Session.create(params);
             return new CheckoutResponse(session.getUrl());
