@@ -2,8 +2,8 @@ package com.fixcity.fixcity.exception;
 
 import com.fixcity.fixcity.comment.exception.CommentNotFoundException;
 import com.fixcity.fixcity.comment.exception.NotCommentOwnerException;
-import com.fixcity.fixcity.reportconfirmation.exception.CannotConfirmOwnReportExceptionReport;
-import com.fixcity.fixcity.reportconfirmation.exception.ReportAlreadyResolvedExceptionReport;
+import com.fixcity.fixcity.reportconfirmation.exception.CannotConfirmOwnReportException;
+import com.fixcity.fixcity.reportconfirmation.exception.ReportAlreadyResolvedException;
 import com.fixcity.fixcity.csc.exception.CscClientException;
 import com.fixcity.fixcity.csc.exception.CscConfigurationException;
 import com.fixcity.fixcity.geography.LocationNotResolvedException;
@@ -173,8 +173,8 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    @ExceptionHandler(CannotConfirmOwnReportExceptionReport.class)
-    public ResponseEntity<ErrorResponse> handleCannotConfirmOwnReport(CannotConfirmOwnReportExceptionReport ex) {
+    @ExceptionHandler(CannotConfirmOwnReportException.class)
+    public ResponseEntity<ErrorResponse> handleCannotConfirmOwnReport(CannotConfirmOwnReportException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(
                         ex.getMessage(),
@@ -183,8 +183,8 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    @ExceptionHandler(ReportAlreadyResolvedExceptionReport.class)
-    public ResponseEntity<ErrorResponse> handleReportAlreadyResolved(ReportAlreadyResolvedExceptionReport ex) {
+    @ExceptionHandler(ReportAlreadyResolvedException.class)
+    public ResponseEntity<ErrorResponse> handleReportAlreadyResolved(ReportAlreadyResolvedException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(
                         ex.getMessage(),

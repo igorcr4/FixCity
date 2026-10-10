@@ -1,7 +1,7 @@
 package com.fixcity.fixcity.reportconfirmation.service;
 
-import com.fixcity.fixcity.reportconfirmation.exception.CannotConfirmOwnReportExceptionReport;
-import com.fixcity.fixcity.reportconfirmation.exception.ReportAlreadyResolvedExceptionReport;
+import com.fixcity.fixcity.reportconfirmation.exception.CannotConfirmOwnReportException;
+import com.fixcity.fixcity.reportconfirmation.exception.ReportAlreadyResolvedException;
 import com.fixcity.fixcity.reportconfirmation.model.ReportConfirmation;
 import com.fixcity.fixcity.reportconfirmation.repository.ReportConfirmationRepository;
 import com.fixcity.fixcity.reportconfirmation.response.ReportConfirmationResponse;
@@ -28,11 +28,11 @@ public class ReportConfirmationService {
         Report report = reportService.findReportById(reportId);
 
         if(report.getUser().getId().equals(userId)) {
-            throw new CannotConfirmOwnReportExceptionReport();
+            throw new CannotConfirmOwnReportException();
         }
 
         if(report.getStatus() == Status.RESOLVED) {
-            throw new ReportAlreadyResolvedExceptionReport();
+            throw new ReportAlreadyResolvedException();
         }
 
         User user = userService.getReference(userId);
