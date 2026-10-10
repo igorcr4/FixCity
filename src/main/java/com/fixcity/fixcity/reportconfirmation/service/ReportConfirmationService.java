@@ -1,10 +1,10 @@
-package com.fixcity.fixcity.confirmation.service;
+package com.fixcity.fixcity.reportconfirmation.service;
 
-import com.fixcity.fixcity.confirmation.exception.CannotConfirmOwnReportException;
-import com.fixcity.fixcity.confirmation.exception.ReportAlreadyResolvedException;
-import com.fixcity.fixcity.confirmation.model.Confirmation;
-import com.fixcity.fixcity.confirmation.repository.ConfirmationRepository;
-import com.fixcity.fixcity.confirmation.response.ConfirmationResponse;
+import com.fixcity.fixcity.reportconfirmation.exception.CannotConfirmOwnReportExceptionReport;
+import com.fixcity.fixcity.reportconfirmation.exception.ReportAlreadyResolvedExceptionReport;
+import com.fixcity.fixcity.reportconfirmation.model.ReportConfirmation;
+import com.fixcity.fixcity.reportconfirmation.repository.ReportConfirmationRepository;
+import com.fixcity.fixcity.reportconfirmation.response.ReportConfirmationResponse;
 import com.fixcity.fixcity.report.Status;
 import com.fixcity.fixcity.report.model.Report;
 import com.fixcity.fixcity.report.service.ReportService;
@@ -18,26 +18,26 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ConfirmationService {
-    private final ConfirmationRepository repository;
+public class ReportConfirmationService {
+    private final ReportConfirmationRepository repository;
     private final ReportService reportService;
     private final UserService userService;
 
     @Transactional
-    public ConfirmationResponse toggleConfirmation(Long reportId, Long userId) {
+    public ReportConfirmationResponse toggleConfirmation(Long reportId, Long userId) {
         Report report = reportService.findReportById(reportId);
 
         if(report.getUser().getId().equals(userId)) {
-            throw new CannotConfirmOwnReportException();
+            throw new CannotConfirmOwnReportExceptionReport();
         }
 
         if(report.getStatus() == Status.RESOLVED) {
-            throw new ReportAlreadyResolvedException();
+            throw new ReportAlreadyResolvedExceptionReport();
         }
 
         User user = userService.getReference(userId);
 
-        Optional<Confirmation> existing = repository.findByReportIdAndUserId(reportId, userId);
+        Optional<ReportConfirmation> existing = repository.findByReportIdAndUserId(reportId, userId);
 
         boolean confirmed;
 
@@ -45,7 +45,7 @@ public class ConfirmationService {
             repository.delete(existing.get());
             confirmed = false;
         } else {
-            Confirmation confirmation = new Confirmation();
+            ReportConfirmation confirmation = new ReportConfirmation();
             confirmation.setReport(report);
             confirmation.setUser(user);
             repository.save(confirmation);
@@ -54,7 +54,7 @@ public class ConfirmationService {
 
         int count = repository.countByReportId(reportId);
 
-        return new ConfirmationResponse(confirmed, count);
+        return new ReportConfirmationResponse(confirmed, count);
     }
 
 }

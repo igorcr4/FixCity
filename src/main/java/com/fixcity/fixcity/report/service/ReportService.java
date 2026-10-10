@@ -1,7 +1,7 @@
 package com.fixcity.fixcity.report.service;
 
-import com.fixcity.fixcity.confirmation.ReportCountProjection;
-import com.fixcity.fixcity.confirmation.repository.ConfirmationRepository;
+import com.fixcity.fixcity.reportconfirmation.ReportCountProjection;
+import com.fixcity.fixcity.reportconfirmation.repository.ReportConfirmationRepository;
 import com.fixcity.fixcity.media.ImageUploadService;
 import com.fixcity.fixcity.municipality.model.Municipality;
 import com.fixcity.fixcity.municipality.service.MunicipalityService;
@@ -41,7 +41,7 @@ public class ReportService {
     private final ReportMapper reportMapper;
     private final UserService userService;
     private final MunicipalityService municipalityService;
-    private final ConfirmationRepository confirmationRepository;
+    private final ReportConfirmationRepository reportConfirmationRepository;
 
     @Transactional
     public ReportResponse createReport(Long userId, ReportCreateRequest request, MultipartFile file) {
@@ -193,7 +193,7 @@ public class ReportService {
 
     private Map<Long, Long> getConfirmationCounts(List<Long> reportIds) {
         if (reportIds.isEmpty()) return Map.of();
-        return confirmationRepository.countByReportIds(reportIds).stream()
+        return reportConfirmationRepository.countByReportIds(reportIds).stream()
                 .collect(Collectors.toMap(
                         ReportCountProjection::getReportId,
                         ReportCountProjection::getCnt));
@@ -201,7 +201,7 @@ public class ReportService {
 
     private Set<Long> getConfirmedReportIds(Long userId, List<Long> reportIds) {
         if (userId == null || reportIds.isEmpty()) return Set.of();
-        return new HashSet<>(confirmationRepository.findConfirmedReportIds(userId, reportIds));
+        return new HashSet<>(reportConfirmationRepository.findConfirmedReportIds(userId, reportIds));
     }
 
     private List<ReportResponse> toEnrichedResponses(List<Report> reports, Long currentUserId) {

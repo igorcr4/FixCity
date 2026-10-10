@@ -1,4 +1,4 @@
-package com.fixcity.fixcity.confirmation.model;
+package com.fixcity.fixcity.reportconfirmation.model;
 
 import com.fixcity.fixcity.report.model.Report;
 import com.fixcity.fixcity.user.model.User;
@@ -9,14 +9,14 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "confirmations",
+@Table(name = "report_confirmations",
         uniqueConstraints = @UniqueConstraint(
                 name = "uq_confirmation_user_report",
                 columnNames = {"user_id", "report_id"})
 )
 @Getter
 @Setter
-public class Confirmation {
+public class ReportConfirmation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

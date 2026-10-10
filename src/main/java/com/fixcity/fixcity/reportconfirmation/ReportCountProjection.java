@@ -1,4 +1,4 @@
-package com.fixcity.fixcity.confirmation;
+package com.fixcity.fixcity.reportconfirmation;
 
 public interface ReportCountProjection {
     Long getReportId();

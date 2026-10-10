@@ -1,0 +1,1 @@
+ALTER TABLE confirmations RENAME TO report_confirmations;

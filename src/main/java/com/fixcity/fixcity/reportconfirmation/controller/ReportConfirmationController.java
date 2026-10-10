@@ -1,7 +1,7 @@
-package com.fixcity.fixcity.confirmation.controller;
+package com.fixcity.fixcity.reportconfirmation.controller;
 
-import com.fixcity.fixcity.confirmation.response.ConfirmationResponse;
-import com.fixcity.fixcity.confirmation.service.ConfirmationService;
+import com.fixcity.fixcity.reportconfirmation.response.ReportConfirmationResponse;
+import com.fixcity.fixcity.reportconfirmation.service.ReportConfirmationService;
 import com.fixcity.fixcity.user.model.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/confirmations")
-public class ConfirmationController {
-    private final ConfirmationService confirmationService;
+public class ReportConfirmationController {
+    private final ReportConfirmationService reportConfirmationService;
 
     @PostMapping("/{reportId}")
-    public ResponseEntity<ConfirmationResponse> toggle(
+    public ResponseEntity<ReportConfirmationResponse> toggle(
             @PathVariable Long reportId,
             @AuthenticationPrincipal UserPrincipal principal) {
-        ConfirmationResponse response =
-                confirmationService.toggleConfirmation(reportId, principal.id());
+        ReportConfirmationResponse response =
+                reportConfirmationService.toggleConfirmation(reportId, principal.id());
         return ResponseEntity.ok(response);
     }
 }
