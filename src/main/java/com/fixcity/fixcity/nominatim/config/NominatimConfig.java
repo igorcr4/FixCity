@@ -1,5 +1,6 @@
-package com.fixcity.fixcity.nominatim;
+package com.fixcity.fixcity.nominatim.config;
 
+import com.fixcity.fixcity.nominatim.properties.NominatimProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

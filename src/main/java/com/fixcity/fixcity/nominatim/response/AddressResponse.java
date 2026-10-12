@@ -1,4 +1,4 @@
-package com.fixcity.fixcity.nominatim;
+package com.fixcity.fixcity.nominatim.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

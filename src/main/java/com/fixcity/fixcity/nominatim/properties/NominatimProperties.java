@@ -1,4 +1,4 @@
-package com.fixcity.fixcity.nominatim;
+package com.fixcity.fixcity.nominatim.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

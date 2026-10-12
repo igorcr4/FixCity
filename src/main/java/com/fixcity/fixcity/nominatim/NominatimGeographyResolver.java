@@ -3,6 +3,9 @@ package com.fixcity.fixcity.nominatim;
 import com.fixcity.fixcity.geography.AdministrativeLocation;
 import com.fixcity.fixcity.geography.GeographyResolver;
 import com.fixcity.fixcity.geography.LocationNotResolvedException;
+import com.fixcity.fixcity.nominatim.client.NominatimClient;
+import com.fixcity.fixcity.nominatim.response.AddressResponse;
+import com.fixcity.fixcity.nominatim.response.NominatimResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

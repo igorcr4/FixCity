@@ -1,4 +1,4 @@
-package com.fixcity.fixcity.nominatim;
+package com.fixcity.fixcity.nominatim.exception;
 
 import org.springframework.web.client.RestClientException;
 

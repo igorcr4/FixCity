@@ -1,5 +1,7 @@
-package com.fixcity.fixcity.nominatim;
+package com.fixcity.fixcity.nominatim.client;
 
+import com.fixcity.fixcity.nominatim.exception.NominatimClientException;
+import com.fixcity.fixcity.nominatim.response.NominatimResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -14,6 +16,7 @@ public class NominatimClient {
         try {
             return nominatimRestClient.get()
                     .uri(uriBuilder -> uriBuilder
+                            .path("/reverse")
                             .queryParam("lat", latitude)
                             .queryParam("lon", longitude)
                             .queryParam("format", "jsonv2")
