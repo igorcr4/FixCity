@@ -25,7 +25,7 @@ public class NominatimClient {
                     .retrieve()
                     .body(NominatimResponse.class);
         }catch (RestClientException ex){
-            throw new NominatimClientException("Reverse geocoding failed", ex);
+            throw new NominatimClientException(ex);
         }
     }
 }
