@@ -3,10 +3,7 @@ package com.fixcity.fixcity.confirmationcode;
 import com.fixcity.fixcity.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.mapstruct.ObjectFactory;
-
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Table(name = "confirmation_codes")
