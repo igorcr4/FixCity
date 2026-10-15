@@ -5,4 +5,9 @@ public record EmailMessage(
         String subject,
         String text
 ) {
+    public EmailMessage {
+        if(to == null || to.isBlank()) {
+            throw new IllegalArgumentException("to must be non blank");
+        }
+    }
 }
